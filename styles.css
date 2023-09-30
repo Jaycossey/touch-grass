@@ -1,0 +1,54 @@
+:root {
+    --grass-green-1: green;
+    --grass-green-2: dark-green;
+    --ground-brown: #653928;
+    --bg-color-1: #57E2D5;
+    --font-color: black;
+    --font-color-2: #DFD04E;
+    --gradient-color-1: #ECEADA;
+    --gradient-color-2: #BAB9AF;
+    overflow: hidden;
+}
+
+body {
+    background-image: linear-gradient(var(--bg-color-1) 70%, var(--ground-brown) 85%, black);
+    font-family: monospace;
+    height: 100vh;
+}
+
+header {
+    width: 80%;
+    height: 60px;
+    border: 6px outset black;
+    position: fixed;
+    top: 0;
+    left: -40px;
+    transform: skew(-20deg, 0deg);
+    background-image: linear-gradient(var(--gradient-color-1), var(--gradient-color-2));
+}
+
+#title {
+    position: relative;
+    transform: skew(20deg, 0deg);
+    left: 150px;
+}
+
+#instruction-text {
+    left: 50%;
+    top: 240px;
+    position: fixed;
+    font-size: 2rem;
+    opacity: 80%;
+    text-shadow: 2px 2px 2px var(--font-color-2);
+}
+
+footer {
+    width: 80%;
+    height: 60px;
+    border: 6px inset black;
+    position: fixed;
+    bottom: 0;
+    right: -40px;
+    transform: skew(-20deg, 0deg);
+    background-image: linear-gradient(var(--gradient-color-2), var(--gradient-color-1));
+}
