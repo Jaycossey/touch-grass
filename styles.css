@@ -48,6 +48,32 @@ header {
     text-shadow: 2px 2px 2px var(--font-color-2);
 }
 
+/* Grass container styling and positioning */
+#grass-display {
+    width: 100%;
+    height: 150px;
+    border: 2px solid green;
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+}
+
+/* Blades of grass positioning styles */
+.bladeOfGrass {
+    position: absolute;
+    bottom: 0;
+    border-radius: 30px 10px 0 0;
+    background-color: green;
+    border-right: 5px solid #64BF0D;
+    transition: ease-in-out;
+    transition-duration: 0.5s;
+}
+
+.bladeOfGrass:hover {
+    cursor: pointer;
+    transform: scale(1.2) rotate(5deg) translate(5px, 0);
+}
+
 /* Container for JS cloud objects */
 #cloud-display {
     width: 100%;
@@ -59,18 +85,9 @@ header {
     z-index: 0;
 }
 
-/* Grass blade default styling */
-.grass {
-    border: 4px solid green;
-}
-
 /* Cloud default styling */
 .cloud {
     border: 4px solid white;
-}
-
-.sunBg {
-    background: radial-gradient(center, #F87DOA 0%, #F2F80A 90%, transparent 100%);
 }
 
 /* Footer, counter container */
