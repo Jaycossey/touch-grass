@@ -54,6 +54,7 @@ function Grass(xPosition, color, height) {
     bladeGrass.className = "bladeOfGrass";
     bladeGrass.style.borderLeft = "2px solid green";
     bladeGrass.style.borderTop = "15px solid green";
+    bladeGrass.style.borderBottom = "5px solid black";
     bladeGrass.style.width = this.width;
     bladeGrass.style.height = this.height;
     bladeGrass.style.left = this.xPosition + "px";
@@ -67,7 +68,7 @@ function Grass(xPosition, color, height) {
 
 // When this function is called, generate a new grass object
 function grassGenerator(currentGrassCount) {
-    let randomGrassHeight = Math.floor(Math.random() * 81 + 40);
+    let randomGrassHeight = Math.floor(Math.random() * 100 + 40);
     let randomXPosition = Math.floor(Math.random() * SCREEN_WIDTH);
 
     // if the current grass count is less than the max grass const
