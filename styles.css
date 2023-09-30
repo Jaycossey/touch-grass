@@ -71,7 +71,7 @@ header {
 
 .bladeOfGrass:hover {
     cursor: pointer;
-    transform: scale(1.2) rotate(5deg) translate(5px, 0);
+    transform: scale(1.2) rotate(5deg) translate(5px, -10px);
 }
 
 /* Container for JS cloud objects */
