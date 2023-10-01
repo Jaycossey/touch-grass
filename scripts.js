@@ -4,19 +4,127 @@ const grassContainer = document.getElementById('grass-display');
 const counterContainer = document.getElementById('counter');
 
 const MAX_CLOUDS = 3;
-const MAX_GRASS = 100;
+const MAX_GRASS = 5;
+
 const SCREEN_WIDTH = window.innerWidth;
 
-let grassCounter = 0;
+const CLOUD_HEIGHT_MAX = 200;
+const CLOUD_HEIGHT_MIN = 120;
+const CLOUD_WIDTH_MAX = 450;
+const CLOUD_WIDTH_MIN = 200;
+const CLOUD_BUBBLE_MAX = 5;
+const CLOUD_BUBBLE_MIN = 3;
+
+const GRASS_HEIGHT_MAX = 150;
+const GRASS_HEIGHT_MIN = 80;
+
 let cloudCounter = 0;
+let grassCounter = 0;
+
+// ARRAYS
+const grassArray = [MAX_GRASS + 1];
+const cloudsArray = [MAX_CLOUDS + 1];
+
+// CLOUD FUNCTIONS -------------------------------------------------------------------------------------
+
+// Timer to spawn a new cloud
+function generateCloudsTimer() {
+    cloudCounter++;
+    // Create maximum amount of clouds for the page
+    if (cloudCounter <= MAX_CLOUDS && cloudCounter >= 0) {
+        // set timeout of 10s / 10000 ms. for each cloud.
+        setTimeout(() => {
+            generateCloud();
+            generateCloudsTimer(cloudCounter);
+            return cloudCounter;
+        }, 100 * cloudCounter);
+    } else {
+        // console.log("cloud count exceeded");
+        return;
+    }
+     
+}
+
+// spawn single cloud shell
+function generateCloud() {
+    // generate random height and width of full cloud
+    let randomWidth = Math.floor(Math.random() * (CLOUD_WIDTH_MAX - CLOUD_WIDTH_MIN) + CLOUD_WIDTH_MIN);
+    let randomHeight = Math.floor(Math.random() * (CLOUD_HEIGHT_MAX - CLOUD_HEIGHT_MIN) + CLOUD_HEIGHT_MIN);
+
+    // generate random position
+    let randomYPosition = Math.floor(Math.random() * (400 - 20) + 20);
+    let randomXPosition = Math.floor(Math.random() * (SCREEN_WIDTH - 0) + 0);
+
+    // create element and position
+    let cloud = document.createElement('div');
+    cloud.className = "cloud";
+    cloud.style.width = randomWidth + "px";
+    cloud.style.height = randomHeight + "px";
+    cloud.style.position = "fixed";
+    cloud.style.right = "10";
+    cloud.style.top = randomYPosition + "px";
+    cloud.style.zIndex = cloudCounter;
+
+    // element style
+    cloud.style.opacity = "65%";
+    cloud.style.left = randomXPosition + "px";
+    cloud.style.marginTop = "20px";
+
+    // add to array and append to container element
+    cloudsArray.push(cloud);
+    cloudContainer.appendChild(cloud);
+
+    // random bubble count for details
+    let randomBubbleCount = Math.floor(Math.random() * (5 - 3) + 3);
+    cloudBubbles(randomBubbleCount);
+}
+
+// Create the detail divs and styling
+function cloudBubbles(bubbleCount) {
+    // so, with a mini bit of recursion
+    bubbleCount--;    
+    console.log(bubbleCount);
+
+    // create duplicate of the div we want to manipulate
+    let cloudCopy = cloudsArray[cloudCounter];
+
+    // create and style the details
+    let detailDiv = document.createElement('div');
+    detailDiv.className = "cloudBubble";
+    detailDiv.style.width = (bubbleCount + 1) * 100 + "%";
+    detailDiv.style.height = bubbleCount + "0%";
+    detailDiv.style.border = "20px solid #E7EAE5";
+    detailDiv.style.borderRadius = "50%";
+    detailDiv.style.backgroundColor = "white";
+    detailDiv.style.padding = "20px";
+    detailDiv.style.position = "absolute";
+
+
+    // append to parent div
+    cloudCopy.appendChild(detailDiv);
+
+    // Replace original with clone
+    cloudsArray[cloudCounter] = cloudCopy;
+    console.log(cloudsArray[cloudCounter]);
+    
+    if (bubbleCount <= 0) {
+        console.log("bubbles finished");
+        return;
+    } else {
+        cloudBubbles(bubbleCount);
+    }
+
+    return;
+}
 
 // GRASS FUNCTIONS ---------------------------------------------------------------------------------------
+
 
 // assign the grass counter to the screen
 function loadOnScreenCounter(counter) {
     // providing counter is within range
     if (grassCounter >= 0 && grassCounter <= MAX_GRASS) {
-        // styling for the counter
+        // styling for the counter display
         counterContainer.textContent = "You have touched grass " + (counter - 1) + " times!";
         counterContainer.style.transform = "skew(20deg)";
         counterContainer.style.margin = "12px";
@@ -30,9 +138,6 @@ function loadOnScreenCounter(counter) {
         counterContainer.textContent = "Error loading grass total";
     }
 }
-
-// grass array
-const grassArray = [];
 
 // grass object constructor
 function Grass(xPosition, color, height) {
@@ -67,7 +172,7 @@ function Grass(xPosition, color, height) {
 // Generate a new grass object
 function grassGenerator(currentGrassCount) {
 
-    let randomGrassHeight = Math.floor(Math.random() * 100 + 40);
+    let randomGrassHeight = Math.floor(Math.random() * (GRASS_HEIGHT_MAX - GRASS_HEIGHT_MIN) + GRASS_HEIGHT_MIN);
     let randomXPosition = Math.floor(Math.random() * SCREEN_WIDTH);
 
     // if the current grass count is less than the max grass const
@@ -86,29 +191,6 @@ function grassGenerator(currentGrassCount) {
     return;
 }
 
-// CLOUD FUNCTIONS -------------------------------------------------------------------------------------
-
-// clouds array 
-const cloudArray = [MAX_CLOUDS];
-
-// cloud object constructor
-function Cloud(width, height, bubbleCount) {
-    this.width = width;
-    this.height = height;
-    this.bubbleCount = bubbleCount;
-
-    this.class = "cloud";
-}
-
-// cloud generator
-function cloudGenerator() {
-    
-}
-
-// 
-function cloudChangeAnimation() {
-
-}
 
 
 // SUN FUNCTIONS --------------------------------------------------------------------------------------
@@ -125,10 +207,8 @@ function generateSun() {
     sun.style.position = "fixed";
     sun.style.top = 0;
     sun.style.right = 0;
+    sun.style.zIndex = 0;
     sun.style.backgroundImage = "radial-gradient(orange 40%, transparent 80%)";
-    sun.style.animation = "pulse";
-    sun.style.animationDuration = "1s";
-    sun.style.animationIterationCount = "infinite";
 
     cloudContainer.appendChild(sun);
     // console.log(sun);
@@ -161,12 +241,12 @@ function wildfire() {
     // This function needs to trigger a counter reset for the grass blades -- keep this here
     // 
 
-    // cloudChangeAnimation();
     // generateFire();
     // loadOnScreenCounter(0);
     // grassGenerator(0);
 }
 
 document.onload = loadOnScreenCounter(0);
+document.onload = generateCloudsTimer(cloudCounter);
 document.onload = generateSun();
 document.onload = grassGenerator(grassCounter);

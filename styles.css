@@ -48,6 +48,39 @@ header {
     text-shadow: 2px 2px 2px var(--font-color-2);
 }
 
+/* Container for JS cloud objects */
+#cloud-display {
+    width: 100%;
+    height: 40%;
+    border: 2px solid black;
+    display: inline;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}
+
+/* Styling for clouds hovering */
+.cloud {
+    animation-name: cloudAnimation;
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    transition: smooth;
+}
+
+/* adding animation to the clouds */
+@keyframes cloudAnimation {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(200px, 0);
+    }
+    100% {
+        tansform: translate(-300px, 0);
+    }
+}
+
 /* Grass container styling and positioning */
 #grass-display {
     width: 100%;
@@ -73,22 +106,6 @@ header {
 .bladeOfGrass:hover {
     cursor: pointer;
     transform: scale(1.05) rotate(4deg) translate(5px, -3px);
-}
-
-/* Container for JS cloud objects */
-#cloud-display {
-    width: 100%;
-    height: 40%;
-    border: 2px solid black;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 0;
-}
-
-/* Cloud default styling */
-.cloud {
-    border: 4px solid white;
 }
 
 /* Footer, counter container */
