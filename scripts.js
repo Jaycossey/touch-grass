@@ -1,41 +1,35 @@
 // GLOBAL VARIABLES
 const cloudContainer = document.getElementById('cloud-display');
 const grassContainer = document.getElementById('grass-display');
-console.log(cloudContainer);
-console.log(grassContainer);
+const counterContainer = document.getElementById('counter');
 
 const MAX_CLOUDS = 3;
-const MAX_GRASS = 50;
+const MAX_GRASS = 100;
 const SCREEN_WIDTH = window.innerWidth;
 
 let grassCounter = 0;
 let cloudCounter = 0;
 
-/**
- * 
- * Planning: What does this program need to do functionally for the grass? 
- * - I need to generate a single grass blade object onload
- * - I need to create an event listener on the blade of grass that listens for a click
- * - onclick, I need to 'spawn' a new grass object
- * - onclick I also need to increment the grassCounter
- * - the new grass blade also needs the event listener.
- * - the grass blades will all need the event listener
- * - all grass objects will need the class "animate" which I can animate with either CSS or JS 
- * - all grass objects spawned will have a math.random x position.
- * 
- * What does this program need to do for the clouds?
- * - I need to generate a function which onload generates cloud objects and adds them to an array
- * - The cloud objects will need the transition: linear property 
- * - the cloud objects will translate along the x axis over time until the left x position is no longer on screen
- * - Once on off screen the object will then be deleted from the array.
- * - I need to keep track of the amount of clouds on screen with cloudCounter
- * - I need to ensure the clouds are styled correctly.
- * 
- * BONUS: I want to generate a pulsing SUN object at the top right of the screen.
- * 
- */
-
 // GRASS FUNCTIONS ---------------------------------------------------------------------------------------
+
+// assign the grass counter to the screen
+function loadOnScreenCounter(counter) {
+    // providing counter is within range
+    if (grassCounter >= 0 && grassCounter <= MAX_GRASS) {
+        // styling for the counter
+        counterContainer.textContent = "You have touched grass " + (counter - 1) + " times!";
+        counterContainer.style.transform = "skew(20deg)";
+        counterContainer.style.margin = "12px";
+        counterContainer.style.fontSize = "1.5rem";
+        counterContainer.style.position = "relative";
+        counterContainer.style.left = "30px";
+        // render wildfire to replace counter 
+    } else if (grassCounter > MAX_GRASS) {
+        counterContainer.textContent = "Oh no! What have you done?! That is a wildfire!";
+    } else {
+        counterContainer.textContent = "Error loading grass total";
+    }
+}
 
 // grass array
 const grassArray = [];
@@ -55,6 +49,7 @@ function Grass(xPosition, color, height) {
     bladeGrass.style.borderLeft = "2px solid green";
     bladeGrass.style.borderTop = "15px solid green";
     bladeGrass.style.borderBottom = "5px solid black";
+    
     bladeGrass.style.width = this.width;
     bladeGrass.style.height = this.height;
     bladeGrass.style.left = this.xPosition + "px";
@@ -62,12 +57,16 @@ function Grass(xPosition, color, height) {
 
     // add blade to screen
     grassContainer.appendChild(bladeGrass);
-    // console.log(bladeGrass);
-    // console.log(grassArray);
+
+    // add event listener
+    bladeGrass.addEventListener('click', e=> {
+        grassGenerator(grassCounter)
+    });
 }
 
-// When this function is called, generate a new grass object
+// Generate a new grass object
 function grassGenerator(currentGrassCount) {
+
     let randomGrassHeight = Math.floor(Math.random() * 100 + 40);
     let randomXPosition = Math.floor(Math.random() * SCREEN_WIDTH);
 
@@ -76,9 +75,11 @@ function grassGenerator(currentGrassCount) {
         // push new grass into array and increment the counter
         grassArray.push(new Grass(randomXPosition, "green", randomGrassHeight));
         grassCounter++;
-        console.log(grassArray);
+        loadOnScreenCounter(grassCounter);
+        // console.log(grassArray);
     } else if (currentGrassCount >= MAX_GRASS) {
         // else trigger wildfire error, eventually triggering the wildfire function to reset the page
+        wildfire();
         console.log("Wildfire!");
     }
 
@@ -99,6 +100,17 @@ function Cloud(width, height, bubbleCount) {
     this.class = "cloud";
 }
 
+// cloud generator
+function cloudGenerator() {
+    
+}
+
+// 
+function cloudChangeAnimation() {
+
+}
+
+
 // SUN FUNCTIONS --------------------------------------------------------------------------------------
 
 // generate sun function, issue with radial gradient, check syntax errors and go from there.
@@ -109,7 +121,6 @@ function generateSun() {
     sun.id = "sun";
     sun.style.width = "150px";
     sun.style.height = "150px";
-    // sun.style.border = "6px solid yellow";
     sun.style.borderRadius = "80px";
     sun.style.position = "fixed";
     sun.style.top = 0;
@@ -123,5 +134,39 @@ function generateSun() {
     // console.log(sun);
 }
 
+// Counter Resets ------------------------------------------------------------------------------------
+function counterReset() {
+
+}
+
+
+// Wildfire and function handler at MAX_GRASS --------------------------------------------------------
+
+// generate fire on wildfire call
+function generateFire() {
+
+}
+
+// handle the "wildfire" to reset the screen
+function wildfire() {
+    // document.getElementsByClassName('');
+
+    // This function needs to handle a lot, might be worth having a few functions trigger within this function to keep with SRP
+    // SRP = Single Responsibility Principle.
+
+    // This function needs to be triggered only when max grass count is reached ./
+    // This function needs to change cloud color to a darker gray -- call a cloud edit function
+    // this function needs to generate a "fire" object sweeping left to right -- call a "fire generation function"
+    // This function needs to delete all grass blades at an xPosition equal to the fire's x position -- handle this within the fire gen function
+    // This function needs to trigger a counter reset for the grass blades -- keep this here
+    // 
+
+    // cloudChangeAnimation();
+    // generateFire();
+    // loadOnScreenCounter(0);
+    // grassGenerator(0);
+}
+
+document.onload = loadOnScreenCounter(0);
 document.onload = generateSun();
 document.onload = grassGenerator(grassCounter);
