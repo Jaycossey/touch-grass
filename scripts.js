@@ -4,7 +4,7 @@ const grassContainer = document.getElementById('grass-display');
 const counterContainer = document.getElementById('counter');
 
 const MAX_CLOUDS = 3;
-const MAX_GRASS = 5;
+const MAX_GRASS = 100;
 
 const SCREEN_WIDTH = window.innerWidth;
 
