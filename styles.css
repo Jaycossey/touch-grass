@@ -129,6 +129,58 @@ header {
     transform: scale(1.05) rotate(4deg) translate(5px, -3px);
 }
 
+/* Wildfire styling and keyframes */
+#fire {
+    animation-name: translateFire;
+    animation-duration: 15s;
+    animation-iteration-count: 1;
+    transition: ease-in-out;
+}
+
+@keyframes translateFire {
+    10% {
+        transform: translate(0, -50px);
+    }
+    30% {
+        transform: translate(0, -50px)
+    }
+    60% {
+        transform: translate(0, -10px);
+    }
+    70% {
+        transform: translate(0, 10px);
+    }
+    80% {
+        transform: translate(0, -10px);
+    }
+    100% {
+        transform: translate(0, 10px);
+    }
+}
+
+.fireRed,
+.fireOrange,
+.fireYellow {
+    animation-name: fireAnimation;
+    animation-iteration-count: infinite;
+}
+
+.fireRed {
+    animation-duration: 2s;
+}
+
+.fireOrange {
+    animation-duration: 1s;
+}
+
+.fireYellow {
+    animation-duration: 1.5s;
+}
+
+@keyframes fireAnimation {
+
+}
+
 /* Footer, counter container */
 footer {
     width: 80%;

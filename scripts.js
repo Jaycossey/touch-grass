@@ -126,7 +126,7 @@ function loadOnScreenCounter(counter) {
     // providing counter is within range
     if (grassCounter >= 0 && grassCounter <= MAX_GRASS) {
         // styling for the counter display
-        counterContainer.textContent = "You have touched grass " + (counter - 1) + " times!";
+        counterContainer.textContent = "You have touched grass " + (counter) + " times!";
         counterContainer.style.transform = "skew(20deg)";
         counterContainer.style.margin = "12px";
         counterContainer.style.fontSize = "1.5rem";
@@ -134,7 +134,9 @@ function loadOnScreenCounter(counter) {
         counterContainer.style.left = "30px";
         // render wildfire to replace counter 
     } else if (grassCounter > MAX_GRASS) {
+        // I need the trigger for wildfire here to coincide with the counter max hit
         counterContainer.textContent = "Oh no! What have you done?! That is a wildfire!";
+        wildfire();
     } else {
         counterContainer.textContent = "Error loading grass total";
     }
@@ -182,13 +184,13 @@ function grassGenerator(currentGrassCount) {
         // push new grass into array and increment the counter
         grassArray.push(new Grass(randomXPosition, "green", randomGrassHeight));
         grassCounter++;
-        loadOnScreenCounter(grassCounter);
+        loadOnScreenCounter(grassCounter - 1);
         // console.log(grassArray);
-    } else if (currentGrassCount >= MAX_GRASS) {
+    } else if (currentGrassCount > MAX_GRASS) {
         // else trigger wildfire error, eventually triggering the wildfire function to reset the page
-        wildfire();
+        // wildfire();
+        console.log("Wildfire!");
         return;
-        // console.log("Wildfire!");
     }
 
     return;
@@ -196,25 +198,26 @@ function grassGenerator(currentGrassCount) {
 
 // remove grass on fire contact
 function removeGrass() {
-    // get correct boundings and assign elements
-    let fire = document.getElementById('fire');
-    let fireRangeMax = fire.getBoundingClientRect('left') + 100;
-    let fireRangeMin = fire.getBoundingClientRect('left');
-    let elementsInFire = document.getElementsByClassName('bladeOfGrass');
+    let grass = document.getElementsByClassName('bladeOfGrass');
 
-    if (elementsInFire.xPosition <= fireRangeMax || elementsInFire.xPosition >= fireRangeMin) {
-        grassContainer.removeChild(elementsInFire);        
-    }   
+    // setTimeout 
+    setTimeout(() => {
+        // remove objects from the array
+        grassArray.forEach((element) => {
+            element = undefined;
+            console.log(element);
+        });
+    
+        // remove elements from screen
+        grassContainer.remove(grass);
+        console.log(grass);        
+    }, 5000);
 
-    // so how do i target the elements within the range of the fire?
-    // I have the width of the fire set at 100px
-    // I also know the xPositions of each of the grass elements.
-    // I need to get the boundingClientRect left of the fire
-    // With that information I can work out collision and remove the elements with this knowledge
-
-    grassArray.forEach((element) => {
-        element = undefined;
-    });
+    setTimeout(() => {
+        
+    grassGenerator(0);
+    console.log("newGrass reset");
+    }, 20000);
 
     return;
 }
@@ -244,56 +247,48 @@ function counterReset() {
     // console.log("update counter to 0");
     grassCounter = 0;
     // console.log("counter: " + grassCounter);
+    
     return;
 }
 
 
 // Wildfire and function handler at MAX_GRASS --------------------------------------------------------
 
-// animation for the fire
-function animateFire() {
-
-}
-
 // generate fire on wildfire call
 function generateFire() {
-    console.log("firegenerator triggered");
+    // console.log("firegenerator triggered");
     let fireDiv = document.createElement('div');
+    
     fireDiv.id = "fire";
-    fireDiv.style.width = "100px";
+    fireDiv.style.width = SCREEN_WIDTH;
     fireDiv.style.height = "220px";
     fireDiv.style.border = "4px solid red";
     fireDiv.style.position = "relative";
     fireDiv.style.left = "0";
-    fireDiv.style.bottom = "90px";
+    fireDiv.style.bottom = 0;
+    fireDiv.style.transform = "translate(0, 100px)";
 
     grassContainer.appendChild(fireDiv);
 
-    // animateFire();
+    setTimeout(() => {
+        grassContainer.removeChild(fireDiv);
+    }, 15000);
+
     removeGrass();
-    // grassContainer.removeChild(fireDiv);
+
+}
+
+// remove grass event listeners
+function removeGrassEventListeners() {
+    grassContainer.childNodes.removeEventListener('click');
 }
 
 // handle the "wildfire" to reset the screen
 function wildfire() {
-    // document.getElementsByClassName('');
-
-    // This function needs to handle a lot, might be worth having a few functions trigger within this function to keep with SRP
-    // SRP = Single Responsibility Principle.
-
-    // This function needs to be triggered only when max grass count is reached ./
-    // This function needs to change cloud color to a darker gray -- call a cloud edit function
-    // this function needs to generate a "fire" object sweeping left to right -- call a "fire generation function"
-    // This function needs to delete all grass blades at an xPosition equal to the fire's x position -- handle this within the fire gen function
-    // This function needs to trigger a counter reset for the grass blades -- keep this here
-    console.log("wildfire triggered");
-    
+    removeGrassEventListeners();
     generateFire();
     counterReset();
-
-    // generateFire();
-    // loadOnScreenCounter(0);
-    // grassGenerator(0);
+    return;
 }
 
 document.onload = loadOnScreenCounter(0);
