@@ -4,7 +4,7 @@ const grassContainer = document.getElementById('grass-display');
 const counterContainer = document.getElementById('counter');
 
 const MAX_CLOUDS = 3;
-const MAX_GRASS = 100;
+const MAX_GRASS = 10;
 
 const SCREEN_WIDTH = window.innerWidth;
 
@@ -37,7 +37,7 @@ function generateCloudsTimer() {
             generateCloud();
             generateCloudsTimer(cloudCounter);
             return cloudCounter;
-        }, 100 * cloudCounter);
+        }, 6000 * cloudCounter);
     } else {
         // console.log("cloud count exceeded");
         return;
@@ -83,7 +83,7 @@ function generateCloud() {
 function cloudBubbles(bubbleCount) {
     // so, with a mini bit of recursion
     bubbleCount--;    
-    console.log(bubbleCount);
+    // console.log(bubbleCount);
 
     // create duplicate of the div we want to manipulate
     let cloudCopy = cloudsArray[cloudCounter];
@@ -105,10 +105,11 @@ function cloudBubbles(bubbleCount) {
 
     // Replace original with clone
     cloudsArray[cloudCounter] = cloudCopy;
-    console.log(cloudsArray[cloudCounter]);
+    
+    // console.log(cloudsArray[cloudCounter]);
     
     if (bubbleCount <= 0) {
-        console.log("bubbles finished");
+        // console.log("bubbles finished");
         return;
     } else {
         cloudBubbles(bubbleCount);
@@ -167,6 +168,7 @@ function Grass(xPosition, color, height) {
     bladeGrass.addEventListener('click', e=> {
         grassGenerator(grassCounter)
     });
+
 }
 
 // Generate a new grass object
@@ -176,7 +178,7 @@ function grassGenerator(currentGrassCount) {
     let randomXPosition = Math.floor(Math.random() * SCREEN_WIDTH);
 
     // if the current grass count is less than the max grass const
-    if (currentGrassCount <= MAX_GRASS) {
+    if (currentGrassCount <= MAX_GRASS && currentGrassCount >= 0) {
         // push new grass into array and increment the counter
         grassArray.push(new Grass(randomXPosition, "green", randomGrassHeight));
         grassCounter++;
@@ -185,13 +187,37 @@ function grassGenerator(currentGrassCount) {
     } else if (currentGrassCount >= MAX_GRASS) {
         // else trigger wildfire error, eventually triggering the wildfire function to reset the page
         wildfire();
-        console.log("Wildfire!");
+        return;
+        // console.log("Wildfire!");
     }
 
     return;
 }
 
+// remove grass on fire contact
+function removeGrass() {
+    // get correct boundings and assign elements
+    let fire = document.getElementById('fire');
+    let fireRangeMax = fire.getBoundingClientRect('left') + 100;
+    let fireRangeMin = fire.getBoundingClientRect('left');
+    let elementsInFire = document.getElementsByClassName('bladeOfGrass');
 
+    if (elementsInFire.xPosition <= fireRangeMax || elementsInFire.xPosition >= fireRangeMin) {
+        grassContainer.removeChild(elementsInFire);        
+    }   
+
+    // so how do i target the elements within the range of the fire?
+    // I have the width of the fire set at 100px
+    // I also know the xPositions of each of the grass elements.
+    // I need to get the boundingClientRect left of the fire
+    // With that information I can work out collision and remove the elements with this knowledge
+
+    grassArray.forEach((element) => {
+        element = undefined;
+    });
+
+    return;
+}
 
 // SUN FUNCTIONS --------------------------------------------------------------------------------------
 
@@ -211,20 +237,41 @@ function generateSun() {
     sun.style.backgroundImage = "radial-gradient(orange 40%, transparent 80%)";
 
     cloudContainer.appendChild(sun);
-    // console.log(sun);
 }
 
 // Counter Resets ------------------------------------------------------------------------------------
 function counterReset() {
-
+    // console.log("update counter to 0");
+    grassCounter = 0;
+    // console.log("counter: " + grassCounter);
+    return;
 }
 
 
 // Wildfire and function handler at MAX_GRASS --------------------------------------------------------
 
+// animation for the fire
+function animateFire() {
+
+}
+
 // generate fire on wildfire call
 function generateFire() {
+    console.log("firegenerator triggered");
+    let fireDiv = document.createElement('div');
+    fireDiv.id = "fire";
+    fireDiv.style.width = "100px";
+    fireDiv.style.height = "220px";
+    fireDiv.style.border = "4px solid red";
+    fireDiv.style.position = "relative";
+    fireDiv.style.left = "0";
+    fireDiv.style.bottom = "90px";
 
+    grassContainer.appendChild(fireDiv);
+
+    // animateFire();
+    removeGrass();
+    // grassContainer.removeChild(fireDiv);
 }
 
 // handle the "wildfire" to reset the screen
@@ -239,7 +286,10 @@ function wildfire() {
     // this function needs to generate a "fire" object sweeping left to right -- call a "fire generation function"
     // This function needs to delete all grass blades at an xPosition equal to the fire's x position -- handle this within the fire gen function
     // This function needs to trigger a counter reset for the grass blades -- keep this here
-    // 
+    console.log("wildfire triggered");
+    
+    generateFire();
+    counterReset();
 
     // generateFire();
     // loadOnScreenCounter(0);
