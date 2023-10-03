@@ -213,13 +213,16 @@ function removeGrass() {
         console.log(grass);        
     }, 5000);
 
-    setTimeout(() => {
-        
-    grassGenerator(0);
-    console.log("newGrass reset");
-    }, 20000);
-
     return;
+}
+
+// reset grass
+function resetGrass() {
+    setTimeout(() => {
+        console.log("reset grass check");
+        grassGenerator(0);
+        // grassContainer.appendChild(grassArray[1]);
+    }, 5000);
 }
 
 // SUN FUNCTIONS --------------------------------------------------------------------------------------
@@ -242,16 +245,6 @@ function generateSun() {
     cloudContainer.appendChild(sun);
 }
 
-// Counter Resets ------------------------------------------------------------------------------------
-function counterReset() {
-    // console.log("update counter to 0");
-    grassCounter = 0;
-    // console.log("counter: " + grassCounter);
-    
-    return;
-}
-
-
 // Wildfire and function handler at MAX_GRASS --------------------------------------------------------
 
 // generate fire on wildfire call
@@ -270,24 +263,20 @@ function generateFire() {
 
     grassContainer.appendChild(fireDiv);
 
+    removeGrass();
+    
     setTimeout(() => {
         grassContainer.removeChild(fireDiv);
-    }, 15000);
+        resetGrass();
+    }, 2000);
 
-    removeGrass();
 
-}
-
-// remove grass event listeners
-function removeGrassEventListeners() {
-    grassContainer.childNodes.removeEventListener('click');
 }
 
 // handle the "wildfire" to reset the screen
 function wildfire() {
-    removeGrassEventListeners();
     generateFire();
-    counterReset();
+    grassCounter = 0;
     return;
 }
 
