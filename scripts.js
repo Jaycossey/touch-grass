@@ -277,10 +277,10 @@ function generateFire() {
     grassContainer.appendChild(fireDiv);
     // this timer technically does nothing, as the remove grass triggers the removal of the 
     // fireDiv as well. bug to fix another time.
-    // setTimeout(() => {
-    //     grassContainer.removeChild(fireDiv);
-    //     window.location.reload();
-    // }, 20000);
+    setTimeout(() => {
+        grassContainer.removeChild(fireDiv);
+        window.location.reload();
+    }, 20000);
 }
 
 // handle the "wildfire" to reset the screen
