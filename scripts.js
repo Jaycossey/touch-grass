@@ -165,6 +165,8 @@ function Grass(xPosition, color, height) {
 
     // add blade to screen
     grassContainer.appendChild(bladeGrass);
+    console.log(grassContainer);
+    console.log("should append now");
 
     // add event listener
     bladeGrass.addEventListener('click', e=> {
@@ -175,7 +177,7 @@ function Grass(xPosition, color, height) {
 
 // Generate a new grass object
 function grassGenerator(currentGrassCount) {
-
+    console.log("grasstick");
     let randomGrassHeight = Math.floor(Math.random() * (GRASS_HEIGHT_MAX - GRASS_HEIGHT_MIN) + GRASS_HEIGHT_MIN);
     let randomXPosition = Math.floor(Math.random() * SCREEN_WIDTH);
 
@@ -205,13 +207,13 @@ function removeGrass() {
         // remove objects from the array
         grassArray.forEach((element) => {
             element = undefined;
-            console.log(element);
+            console.log("Grass Array: " + element);
         });
     
         // remove elements from screen
         grassContainer.remove(grass);
         console.log(grass);        
-    }, 5000);
+    }, 500);
 
     return;
 }
@@ -220,8 +222,8 @@ function removeGrass() {
 function resetGrass() {
     setTimeout(() => {
         console.log("reset grass check");
-        grassGenerator(0);
-        // grassContainer.appendChild(grassArray[1]);
+        grassGenerator(grassCounter);
+        // grassContainer.appendChild(grassArray[-1]);
     }, 5000);
 }
 
@@ -263,20 +265,23 @@ function generateFire() {
 
     grassContainer.appendChild(fireDiv);
 
-    removeGrass();
     
     setTimeout(() => {
         grassContainer.removeChild(fireDiv);
-        resetGrass();
     }, 2000);
-
 
 }
 
 // handle the "wildfire" to reset the screen
 function wildfire() {
     generateFire();
+    removeGrass();
     grassCounter = 0;
+    setTimeout(() => {
+        resetGrass();
+        console.log("should reset now");
+    }, 10000);
+    // grassGenerator(grassCounter);
     return;
 }
 
@@ -284,3 +289,17 @@ document.onload = loadOnScreenCounter(0);
 document.onload = generateCloudsTimer(cloudCounter);
 document.onload = generateSun();
 document.onload = grassGenerator(grassCounter);
+
+/**
+ * So the current issues are due to the reset functions of the grass, when it calls grass generator
+ * it is not appending the child to the container. 
+ * 
+ * However, upon looking at the console logs the container is still present as are 5 of the grass blade 
+ * objects. could it be an issue with the remove child section in remove grass function? 
+ * 
+ * best way to debug is to log each stage and check for inconsistencies on the logic as well as enabling the 
+ * break points throughout to keep track of both the array contents and the child elements within the grass
+ * container.
+ * 
+ * 
+ */
