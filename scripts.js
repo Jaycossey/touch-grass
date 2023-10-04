@@ -4,7 +4,7 @@ const grassContainer = document.getElementById('grass-display');
 const counterContainer = document.getElementById('counter');
 
 const MAX_CLOUDS = 3;
-const MAX_GRASS = 10;
+const MAX_GRASS = 100;
 
 const SCREEN_WIDTH = window.innerWidth;
 
@@ -245,11 +245,23 @@ function generateSun() {
 
 // Wildfire and function handler at MAX_GRASS --------------------------------------------------------
 
+// fire detail generator
+function fireDetailAddition(parent) {
+    for (let i = 0; i < 4; i++) {
+        let fireDetail = document.createElement('div');
+        fireDetail.class = "firedetail";
+        fireDetail.style.width = "200px";
+        fireDetail.style.height = "100%";
+        parent.appendChild(fireDetail);
+    }    
+    return;
+}
+
 // generate fire on wildfire call
 function generateFire() {
     // console.log("firegenerator triggered");
     let fireDiv = document.createElement('div');
-    
+
     fireDiv.id = "fire";
     fireDiv.style.width = SCREEN_WIDTH;
     fireDiv.style.height = "220px";
@@ -258,6 +270,9 @@ function generateFire() {
     fireDiv.style.left = "0";
     fireDiv.style.bottom = 0;
     fireDiv.style.transform = "translate(0, 100px)";
+
+    // add details for fire
+    fireDetailAddition(fireDiv);
 
     grassContainer.appendChild(fireDiv);
     // this timer technically does nothing, as the remove grass triggers the removal of the 

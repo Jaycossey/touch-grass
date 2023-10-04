@@ -135,6 +135,12 @@ header {
     animation-duration: 20s;
     animation-iteration-count: 1;
     transition: ease-in-out;
+    display: flex;
+    flex-direction: row;
+}
+
+.fireDetail {
+    border: 2px solid red;
 }
 
 @keyframes translateFire {
