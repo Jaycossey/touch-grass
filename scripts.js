@@ -165,8 +165,7 @@ function Grass(xPosition, color, height) {
 
     // add blade to screen
     grassContainer.appendChild(bladeGrass);
-    console.log(grassContainer);
-    console.log("should append now");
+    // console.log("should append now");
 
     // add event listener
     bladeGrass.addEventListener('click', e=> {
@@ -201,31 +200,28 @@ function grassGenerator(currentGrassCount) {
 // remove grass on fire contact
 function removeGrass() {
     let grass = document.getElementsByClassName('bladeOfGrass');
-
-    // setTimeout 
+    // setTimeout -- For whatever reason, this also triggers the removal of the wildfire element
     setTimeout(() => {
         // remove objects from the array
         grassArray.forEach((element) => {
             element = undefined;
             console.log("Grass Array: " + element);
         });
-    
-        // remove elements from screen
+        // remove elements from screen - this also removes the fire div, unsure why
         grassContainer.remove(grass);
-        console.log(grass);        
-    }, 500);
+    }, 15000);
 
     return;
 }
 
-// reset grass
-function resetGrass() {
-    setTimeout(() => {
-        console.log("reset grass check");
-        grassGenerator(grassCounter);
-        // grassContainer.appendChild(grassArray[-1]);
-    }, 5000);
-}
+// // reset grass -- this function will need updating when returning to the project another time
+// function resetGrass() {
+//     setTimeout(() => {
+//         console.log("reset grass check");
+//         grassGenerator(grassCounter);
+//         // grassContainer.appendChild(grassArray[-1]);
+//     }, 5000);
+// }
 
 // SUN FUNCTIONS --------------------------------------------------------------------------------------
 
@@ -264,12 +260,12 @@ function generateFire() {
     fireDiv.style.transform = "translate(0, 100px)";
 
     grassContainer.appendChild(fireDiv);
-
-    
-    setTimeout(() => {
-        grassContainer.removeChild(fireDiv);
-    }, 2000);
-
+    // this timer technically does nothing, as the remove grass triggers the removal of the 
+    // fireDiv as well. bug to fix another time.
+    // setTimeout(() => {
+    //     grassContainer.removeChild(fireDiv);
+    //     window.location.reload();
+    // }, 20000);
 }
 
 // handle the "wildfire" to reset the screen
@@ -277,10 +273,11 @@ function wildfire() {
     generateFire();
     removeGrass();
     grassCounter = 0;
-    setTimeout(() => {
-        resetGrass();
-        console.log("should reset now");
-    }, 10000);
+    // This timeout function clashed with other timers and triggers too early, maybe a look into async await
+    // setTimeout(() => {
+    //     resetGrass();
+    //     console.log("should reset now");
+    // }, 10000);
     // grassGenerator(grassCounter);
     return;
 }
@@ -301,5 +298,7 @@ document.onload = grassGenerator(grassCounter);
  * break points throughout to keep track of both the array contents and the child elements within the grass
  * container.
  * 
+ * To make things easier in the short term I will refresh the page to reset the counters etc. 
  * 
+ * THIS IS NOT A SOLUTION, this is just to finish the project for now and allow me to move on to other projects
  */
