@@ -37,7 +37,7 @@ function generateCloudsTimer() {
             generateCloud();
             generateCloudsTimer(cloudCounter);
             return cloudCounter;
-        }, 100 * cloudCounter);
+        }, 6000 * cloudCounter);
     } else {
         // console.log("cloud count exceeded");
         return;
@@ -83,7 +83,7 @@ function generateCloud() {
 function cloudBubbles(bubbleCount) {
     // so, with a mini bit of recursion
     bubbleCount--;    
-    console.log(bubbleCount);
+    // console.log(bubbleCount);
 
     // create duplicate of the div we want to manipulate
     let cloudCopy = cloudsArray[cloudCounter];
@@ -105,10 +105,11 @@ function cloudBubbles(bubbleCount) {
 
     // Replace original with clone
     cloudsArray[cloudCounter] = cloudCopy;
-    console.log(cloudsArray[cloudCounter]);
+    
+    // console.log(cloudsArray[cloudCounter]);
     
     if (bubbleCount <= 0) {
-        console.log("bubbles finished");
+        // console.log("bubbles finished");
         return;
     } else {
         cloudBubbles(bubbleCount);
@@ -125,7 +126,7 @@ function loadOnScreenCounter(counter) {
     // providing counter is within range
     if (grassCounter >= 0 && grassCounter <= MAX_GRASS) {
         // styling for the counter display
-        counterContainer.textContent = "You have touched grass " + (counter - 1) + " times!";
+        counterContainer.textContent = "You have touched grass " + (counter) + " times!";
         counterContainer.style.transform = "skew(20deg)";
         counterContainer.style.margin = "12px";
         counterContainer.style.fontSize = "1.5rem";
@@ -133,7 +134,9 @@ function loadOnScreenCounter(counter) {
         counterContainer.style.left = "30px";
         // render wildfire to replace counter 
     } else if (grassCounter > MAX_GRASS) {
+        // I need the trigger for wildfire here to coincide with the counter max hit
         counterContainer.textContent = "Oh no! What have you done?! That is a wildfire!";
+        wildfire();
     } else {
         counterContainer.textContent = "Error loading grass total";
     }
@@ -162,36 +165,63 @@ function Grass(xPosition, color, height) {
 
     // add blade to screen
     grassContainer.appendChild(bladeGrass);
+    // console.log("should append now");
 
     // add event listener
     bladeGrass.addEventListener('click', e=> {
         grassGenerator(grassCounter)
     });
+
 }
 
 // Generate a new grass object
 function grassGenerator(currentGrassCount) {
-
+    console.log("grasstick");
     let randomGrassHeight = Math.floor(Math.random() * (GRASS_HEIGHT_MAX - GRASS_HEIGHT_MIN) + GRASS_HEIGHT_MIN);
     let randomXPosition = Math.floor(Math.random() * SCREEN_WIDTH);
 
     // if the current grass count is less than the max grass const
-    if (currentGrassCount <= MAX_GRASS) {
+    if (currentGrassCount <= MAX_GRASS && currentGrassCount >= 0) {
         // push new grass into array and increment the counter
         grassArray.push(new Grass(randomXPosition, "green", randomGrassHeight));
         grassCounter++;
-        loadOnScreenCounter(grassCounter);
+        loadOnScreenCounter(grassCounter - 1);
         // console.log(grassArray);
-    } else if (currentGrassCount >= MAX_GRASS) {
+    } else if (currentGrassCount > MAX_GRASS) {
         // else trigger wildfire error, eventually triggering the wildfire function to reset the page
-        wildfire();
+        // wildfire();
         console.log("Wildfire!");
+        return;
     }
 
     return;
 }
 
+// remove grass on fire contact
+function removeGrass() {
+    let grass = document.getElementsByClassName('bladeOfGrass');
+    // setTimeout -- For whatever reason, this also triggers the removal of the wildfire element
+    setTimeout(() => {
+        // remove objects from the array
+        grassArray.forEach((element) => {
+            element = undefined;
+            console.log("Grass Array: " + element);
+        });
+        // remove elements from screen - this also removes the fire div, unsure why
+        grassContainer.remove(grass);
+    }, 15000);
 
+    return;
+}
+
+// // reset grass -- this function will need updating when returning to the project another time
+// function resetGrass() {
+//     setTimeout(() => {
+//         console.log("reset grass check");
+//         grassGenerator(grassCounter);
+//         // grassContainer.appendChild(grassArray[-1]);
+//     }, 5000);
+// }
 
 // SUN FUNCTIONS --------------------------------------------------------------------------------------
 
@@ -211,42 +241,79 @@ function generateSun() {
     sun.style.backgroundImage = "radial-gradient(orange 40%, transparent 80%)";
 
     cloudContainer.appendChild(sun);
-    // console.log(sun);
 }
-
-// Counter Resets ------------------------------------------------------------------------------------
-function counterReset() {
-
-}
-
 
 // Wildfire and function handler at MAX_GRASS --------------------------------------------------------
 
+// fire detail generator
+function fireDetailAddition(parent) {
+    for (let i = 0; i < 4; i++) {
+        let fireDetail = document.createElement('div');
+        fireDetail.class = "firedetail";
+        fireDetail.style.width = "200px";
+        fireDetail.style.height = "100%";
+        parent.appendChild(fireDetail);
+    }    
+    return;
+}
+
 // generate fire on wildfire call
 function generateFire() {
+    // console.log("firegenerator triggered");
+    let fireDiv = document.createElement('div');
 
+    fireDiv.id = "fire";
+    fireDiv.style.width = SCREEN_WIDTH;
+    fireDiv.style.height = "220px";
+    fireDiv.style.border = "4px solid red";
+    fireDiv.style.position = "relative";
+    fireDiv.style.left = "0";
+    fireDiv.style.bottom = 0;
+    fireDiv.style.transform = "translate(0, 100px)";
+
+    // add details for fire
+    fireDetailAddition(fireDiv);
+
+    grassContainer.appendChild(fireDiv);
+    // this timer technically does nothing, as the remove grass triggers the removal of the 
+    // fireDiv as well. bug to fix another time.
+    // setTimeout(() => {
+    //     grassContainer.removeChild(fireDiv);
+    //     window.location.reload();
+    // }, 20000);
 }
 
 // handle the "wildfire" to reset the screen
 function wildfire() {
-    // document.getElementsByClassName('');
-
-    // This function needs to handle a lot, might be worth having a few functions trigger within this function to keep with SRP
-    // SRP = Single Responsibility Principle.
-
-    // This function needs to be triggered only when max grass count is reached ./
-    // This function needs to change cloud color to a darker gray -- call a cloud edit function
-    // this function needs to generate a "fire" object sweeping left to right -- call a "fire generation function"
-    // This function needs to delete all grass blades at an xPosition equal to the fire's x position -- handle this within the fire gen function
-    // This function needs to trigger a counter reset for the grass blades -- keep this here
-    // 
-
-    // generateFire();
-    // loadOnScreenCounter(0);
-    // grassGenerator(0);
+    generateFire();
+    removeGrass();
+    grassCounter = 0;
+    // This timeout function clashed with other timers and triggers too early, maybe a look into async await
+    // setTimeout(() => {
+    //     resetGrass();
+    //     console.log("should reset now");
+    // }, 10000);
+    // grassGenerator(grassCounter);
+    return;
 }
 
 document.onload = loadOnScreenCounter(0);
 document.onload = generateCloudsTimer(cloudCounter);
 document.onload = generateSun();
 document.onload = grassGenerator(grassCounter);
+
+/**
+ * So the current issues are due to the reset functions of the grass, when it calls grass generator
+ * it is not appending the child to the container. 
+ * 
+ * However, upon looking at the console logs the container is still present as are 5 of the grass blade 
+ * objects. could it be an issue with the remove child section in remove grass function? 
+ * 
+ * best way to debug is to log each stage and check for inconsistencies on the logic as well as enabling the 
+ * break points throughout to keep track of both the array contents and the child elements within the grass
+ * container.
+ * 
+ * To make things easier in the short term I will refresh the page to reset the counters etc. 
+ * 
+ * THIS IS NOT A SOLUTION, this is just to finish the project for now and allow me to move on to other projects
+ */

@@ -59,6 +59,26 @@ header {
     z-index: 0;
 }
 
+/* Styling and keyframes for sun */
+#sun {
+    animation-name: sunPulse;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    transition: ease-in-out;
+}
+
+@keyframes sunPulse {
+    0% {
+        transform: scale(100%);
+    }
+    50% {
+        transform: scale(110%);
+    }
+    100% {
+        transform: scale(100%);
+    }
+}
+
 /* Styling for clouds hovering */
 .cloud {
     animation-name: cloudAnimation;
@@ -71,12 +91,15 @@ header {
 @keyframes cloudAnimation {
     0% {
         transform: translate(0, 0);
+        opacity: 10%;
     }
     50% {
         transform: translate(200px, 0);
+        opacity: 70%;
     }
     100% {
         tansform: translate(-300px, 0);
+        opacity: 10%;
     }
 }
 
@@ -84,7 +107,6 @@ header {
 #grass-display {
     width: 100%;
     height: 150px;
-    /* border: 2px solid green; */
     position: absolute;
     bottom: 60px;
     left: 0;
@@ -105,6 +127,64 @@ header {
 .bladeOfGrass:hover {
     cursor: pointer;
     transform: scale(1.05) rotate(4deg) translate(5px, -3px);
+}
+
+/* Wildfire styling and keyframes */
+#fire {
+    animation-name: translateFire;
+    animation-duration: 20s;
+    animation-iteration-count: 1;
+    transition: ease-in-out;
+    display: flex;
+    flex-direction: row;
+}
+
+.fireDetail {
+    border: 2px solid red;
+}
+
+@keyframes translateFire {
+    10% {
+        transform: translate(0, -50px);
+    }
+    30% {
+        transform: translate(0, -60px)
+    }
+    50% {
+        transform: translate(0, -70px);
+    }
+    70% {
+        transform: translate(0, -60px);
+    }
+    85% {
+        transform: translate(0, -70px);
+    }
+    100% {
+        transform: translate(0, -60px);
+    }
+}
+
+.fireRed,
+.fireOrange,
+.fireYellow {
+    animation-name: fireAnimation;
+    animation-iteration-count: infinite;
+}
+
+.fireRed {
+    animation-duration: 2s;
+}
+
+.fireOrange {
+    animation-duration: 1s;
+}
+
+.fireYellow {
+    animation-duration: 1.5s;
+}
+
+@keyframes fireAnimation {
+
 }
 
 /* Footer, counter container */
